@@ -15,7 +15,7 @@
     //Fetch result
     $result = $statement->fetch(PDO::FETCH_ASSOC);
     //Prepare query
-    $query = "SELECT personnel.accessrights AS accessRights FROM personnel WHERE personnel.ID = :pid";
+    $query = "SELECT personnel.accessrights AS accessRights FROM personnel WHERE personnel.PID = :pid";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query

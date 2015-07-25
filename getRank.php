@@ -2,7 +2,7 @@
   //Get's a Rank from RankID
   function getRankNameFromRankID($id) {
     //Check parameters as valid
-    if(!is_int($id)) throw new Exception("Invalid Rank ID.");
+    $id = intval($id);
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
@@ -24,7 +24,7 @@
   //Get's a RankDescription from RankID
   function getRankDescriptionFromRankID($id) {
     //Check parameters as valid
-    if(!is_int($id)) throw new Exception("Invalid Rank ID.");
+    $id = intval($id);
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
@@ -46,7 +46,7 @@
   //Get's a RankInsignia from RankID
   function getRankInsigniaFromRankID($id) {
     //Check parameters as valid
-    if(!is_int($id)) throw new Exception("Invalid Rank ID.");
+    $id = intval($id);
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query

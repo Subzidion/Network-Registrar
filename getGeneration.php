@@ -2,7 +2,7 @@
   //Get's a Generation from GenerationID
   function getGenerationNameFromGenerationID($id) {
     //Check parameters as valid
-    if(!is_int($id)) throw new Exception("Invalid Generation ID.");
+    $id = intval($id);
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
