@@ -38,4 +38,15 @@
     //Return array
     return $result;
   }
+
+  //Convert _POST values of UUID or Username or PID to PID
+  function getPID() {
+      if(isset($_POST['UUID'])) $targetPID = getPIDFromUUID($_POST['UUID'])['PID'];
+      //Username -> PID
+      else if(isset($_POST['username'])) $targetPID = getPIDFromUsername($_POST['username'])['PID'];
+      //PID
+      else if(isset($_POST['PID'])) $targetPID = $_POST['PID'];
+      if($targetPID == "") die(json_encode(array("Invalid Parameters. Usage: request=\"updateKD\" must include a UUID, kills, and deaths parameters.")));
+      return $targetPID;
+  }
 ?>
