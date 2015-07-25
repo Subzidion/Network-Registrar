@@ -16,6 +16,17 @@
     die("ERROR: " . $message);
   }
 
+  //Convert _POST values of UUID or Username or PID to PID
+  function getPID() {
+      if(isset($_POST['UUID'])) $targetPID = getPIDFromUUID($_POST['UUID'])['PID'];
+      //Username -> PID
+      else if(isset($_POST['username'])) $targetPID = getPIDFromUsername($_POST['username'])['PID'];
+      //PID
+      else if(isset($_POST['PID'])) $targetPID = $_POST['PID'];
+      if($targetPID == "") die(json_encode(array("Invalid Parameters. Usage: request=\"updateKD\" must include a UUID, kills, and deaths parameters.")));
+      return $targetPID;
+  }
+
   function changeRank($pid, $rank) {
     global $dbConn;
     //Prepare query
@@ -26,6 +37,22 @@
     $statement->bindValue(':pid', intval($pid), PDO::PARAM_INT);
     //Bind parameter to query
     $statement->bindValue(':rank', intval($rank), PDO::PARAM_INT);
+    //Execute, throw exception if query fails
+    if(!$statement->execute()) throw new Exception("Query failed: " . $statement->errorInfo()[2] .".");
+  }
+
+  function updateKD($pid, $kills, $deaths) {
+    global $dbConn;
+    //Prepare query
+    $query = "UPDATE personnel SET kills=kills + :kills, deaths=deaths + :deaths WHERE PID=:pid;";
+    //Prepare Statement
+    $statement = $dbConn->prepare($query);
+    //Bind parameter to query
+    $statement->bindValue(':pid', intval($pid), PDO::PARAM_INT);
+    //Bind parameter to query
+    $statement->bindValue(':kills', intval($kills), PDO::PARAM_INT);
+    //Bind parameter to query
+    $statement->bindValue(':deaths', intval($deaths), PDO::PARAM_INT);
     //Execute, throw exception if query fails
     if(!$statement->execute()) throw new Exception("Query failed: " . $statement->errorInfo()[2] .".");
   }
@@ -61,18 +88,29 @@
 
     //Promote or Demote to RankID or RankName Personnel based on UUID, username, or PID
     else if($_POST['request'] == "changeRank") {
+      //Get User PID from Username, UUID, or PID
+      $targetPID = getPid();
+      //RankID
       if(isset($_POST['rankID'])) $targetRank = $_POST['rankID'];
+      //Rank Name -> RankID
       else if(isset($_POST['rankName'])) $targetRank = getRankIDFromRankName($_POST['rankName'])['rankID'];
-      //Promote UUID
-      if(isset($_POST['UUID'])) $targetPID = getPIDFromUUID($_POST['UUID'])['PID'];
-      else if(isset($_POST['username'])) $targetPID = getPIDFromUsername($_POST['username'])['PID'];
-      //Promote PID
-      else if(isset($_POST['PID'])) $targetPID = $_POST['PID'];
+      //Invalid Parameters
       else die(json_encode(array("Invalid Parameters. Usage: request=\"changeRank\" must include a UUID or username or PID parameter.")));
+      //Change Rank
       changeRank($targetPID, $targetRank);
     }
+
+    else if($_POST['request'] == "updateKD") {
+      if(!isset($_POST['kills']) || !isset($_POST['deaths'])) die(json_encode(array("Invalid Parameters. Usage: request=\"updateKD\" must include a UUID, kills, and deaths parameters.")));
+      $targetPID = getPid();
+      updateKD($targetPID, $_POST['kills'], $_POST['deaths']);
+
+    }
+
     //Get Rank Patch for UUID, username, PID
     else if($_POST['request'] == "rankPatch") {
+      //Get User PID from Username, UUID, or PID
+      $targetPID = getPid();
       //UUID -> Rank Insignia
       //if(isset($_POST['UUID'])) die(json_encode(getRankInsigniaFromID(/* GET PERSONNEL RANK HERE */)['rankInsignia']));
       //else die(json_encode(array("Invalid Parameters. Usage: request=\"rankPatch\" must include a UUID parameter.")))
@@ -84,6 +122,8 @@
       else {
         //All known Accounts
         if($_POST['type'] == "alts") {
+          //Get User PID from Username, UUID, or PID
+          $targetPID = getPid();
           //UUID -> All Known Accounts' Details
           //if(isset($_POST['UUID'])) 
           //Username -> All Known Accounts' Details
@@ -91,6 +131,8 @@
         }
         //Main Account
         if($_POST['type'] == "main") {
+          //Get User PID from Username, UUID, or PID
+          $targetPID = getPid();
           //UUID -> Main Account Details
           //if(isset($_POST['UUID']))
           //Username -> Main Account Details
@@ -115,4 +157,4 @@
     die(json_encode(array_values(getPersonnelByPID(29))));
   }
 
-?>    
+?>
