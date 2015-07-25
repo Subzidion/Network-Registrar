@@ -15,10 +15,8 @@
     if(!$statement->execute()) throw new Exception("Query failed.");
     //Fetch result
     $result = $statement->fetch(PDO::FETCH_ASSOC);
-    //Create array of data to return
-    $data = array('PID'  => intval($result['PID']));
-    //Return array
-    return $data;
+    //Return array;
+    return $result;
   }
 
   //Get's a Personnel ID from a UUID
@@ -37,9 +35,7 @@
     if(!$statement->execute()) throw new Exception("Query failed.");
     //Fetch result
     $result = $statement->fetch(PDO::FETCH_ASSOC);
-    //Create array of data to return
-    $data = array('PID'  => intval($result['PID']));
     //Return array
-    return $data;
+    return $result;
   }
 ?>
