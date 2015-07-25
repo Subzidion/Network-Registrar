@@ -10,7 +10,7 @@
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
-    $statement->bindValue(':username', strval($username), PDO::PARAM_STRING);
+    $statement->bindValue(':username', strval($username), PDO::PARAM_STR);
     //Execute, throw exception if query fails
     if(!$statement->execute()) throw new Exception("Query failed.");
     //Fetch result
@@ -32,7 +32,7 @@
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
-    $statement->bindValue(':uuid', strval($uuid), PDO::PARAM_STRING);
+    $statement->bindValue(':uuid', strval($uuid), PDO::PARAM_STR);
     //Execute, throw exception if query fails
     if(!$statement->execute()) throw new Exception("Query failed.");
     //Fetch result
