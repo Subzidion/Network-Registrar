@@ -20,9 +20,10 @@
     errorReport("Database connection failed.");
   } 
 
+  //Authenticate User
   $requestUUID = $_SERVER["HTTP_X_SECONDLIFE_OWNER_KEY"];
   try {
-    if(count(getAccessRightsFromUUID($requestUUID)) == 0) errorReport("Access denied.");
+    if(getAccessRightsFromUUID($requestUUID)['accessRights'] == 0) errorReport("Access denied.");
   } catch(Exception $e) {
     errorReport($e->getMessage());
   }
