@@ -6,7 +6,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT accounts.PID AS PID WHERE accounts.username = :username";
+    $query = "SELECT accounts.PID AS PID FROM accounts WHERE accounts.username = :username";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
@@ -28,7 +28,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT accounts.PID AS PID WHERE accounts.UUID = :uuid";
+    $query = "SELECT accounts.PID AS PID from accounts WHERE accounts.UUID = :uuid";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query

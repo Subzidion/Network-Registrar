@@ -2,11 +2,11 @@
   //Get's a Generation from GenerationID
   function getGenerationNameFromGenerationID($id) {
     //Check parameters as valid
-    if(!is_int($pid)) throw new Exception("Invalid Generation ID.");
+    if(!is_int($id)) throw new Exception("Invalid Generation ID.");
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT generations.name AS generationName WHERE generation.ID = :id";
+    $query = "SELECT generations.name AS generationName FROM generations WHERE generations.ID = :id";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
