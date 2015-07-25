@@ -65,6 +65,28 @@
     return $data;
   }
 
+  //Get's a RankID from RankName
+  function getRankIDFromRankName($name) {
+    //Check parameters as valid
+    if(!is_string($name)) throw new Exception("Invalid Rank name.");
+    //Use Database Connection variable in registrarRequest
+    global $dbConn;
+    //Prepare query
+    $query = "SELECT ranks.ID AS rankID FROM ranks WHERE ranks.name = :name";
+    //Prepare Statement
+    $statement = $dbConn->prepare($query);
+    //Bind parameter to query
+    $statement->bindValue(':name', strval($name), PDO::PARAM_STR);
+    //Execute, throw exception if query fails
+    if(!$statement->execute()) throw new Exception("Query failed.");
+    //Fetch result
+    $result = $statement->fetch(PDO::FETCH_ASSOC);
+    //Create array of data to return
+    $data = array('rankID'  => intval($result['rankID']));
+    //Return array
+    return $data;
+  }
+
   //Get's a RankDescription from RankName
   function getRankDescriptionFromRankName($name) {
     //Check parameters as valid
