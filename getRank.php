@@ -6,7 +6,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT ranks.name AS rankName WHERE rank.ID = :id";
+    $query = "SELECT ranks.name AS rankName FROM ranks WHERE ranks.ID = :id";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
@@ -28,7 +28,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT ranks.info AS rankDescription WHERE rank.ID = :id";
+    $query = "SELECT ranks.info AS rankDescription FROM ranks WHERE ranks.ID = :id";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
@@ -43,28 +43,6 @@
     return $data;
   }
 
-  //Get's a RankDescription from RankName
-  function getRankDescriptionFromRankName($name) {
-    //Check parameters as valid
-    if(!is_string($username)) throw new Exception("Invalid Divison name.");
-    //Use Database Connection variable in registrarRequest
-    global $dbConn;
-    //Prepare query
-    $query = "SELECT ranks.info AS rankDescription WHERE ranks.name = :name";
-    //Prepare Statement
-    $statement = $dbConn->prepare($query);
-    //Bind parameter to query
-    $statement->bindValue(':name', strval($name), PDO::PARAM_STR);
-    //Execute, throw exception if query fails
-    if(!$statement->execute()) throw new Exception("Query failed.");
-    //Fetch result
-    $result = $statement->fetch(PDO::FETCH_ASSOC);
-    //Create array of data to return
-    $data = array('rankDescription'  => intval($result['rankDescription']));
-    //Return array
-    return $data;
-  }
-
   //Get's a RankInsignia from RankID
   function getRankInsigniaFromRankID($id) {
     //Check parameters as valid
@@ -72,7 +50,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT ranks.insigniaUUID AS rankInsignia WHERE rank.ID = :id";
+    $query = "SELECT ranks.insigniaUUID AS rankInsignia FROM ranks WHERE ranks.ID = :id";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
@@ -83,28 +61,6 @@
     $result = $statement->fetch(PDO::FETCH_ASSOC);
     //Create array of data to return
     $data = array('rankInsignia'  => strval($result['rankInsignia']));
-    //Return array
-    return $data;
-  }
-
-  //Get's a RankInsignia from RankName
-  function getRankInsigniaFromRankName($name) {
-    //Check parameters as valid
-    if(!is_string($username)) throw new Exception("Invalid Divison name.");
-    //Use Database Connection variable in registrarRequest
-    global $dbConn;
-    //Prepare query
-    $query = "SELECT ranks.insigniaUUID AS rankDescription WHERE ranks.name = :name";
-    //Prepare Statement
-    $statement = $dbConn->prepare($query);
-    //Bind parameter to query
-    $statement->bindValue(':name', strval($name), PDO::PARAM_STR);
-    //Execute, throw exception if query fails
-    if(!$statement->execute()) throw new Exception("Query failed.");
-    //Fetch result
-    $result = $statement->fetch(PDO::FETCH_ASSOC);
-    //Create array of data to return
-    $data = array('rankInsignia'  => intval($result['rankInsignia']));
     //Return array
     return $data;
   }
