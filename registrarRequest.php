@@ -2,7 +2,15 @@
   //Include the SecretKey
   include("../../overwatch/info.php");
   //Include Database Information
-  include "../../external_includes/mysql_network_config.php";
+  include("../../external_includes/mysql_network_config.php");
+  include("getPID.php");
+  include("getUsername.php");
+  include("getAccessRights.php");
+  include("getGeneraiton.php");
+  include("getDivision.php");
+  include("getRank.php");
+  include("getPersonnel.php");
+  include("getAccounts.php");
 
   function errorReport($message) {
     die("ERROR: " . $message);
@@ -20,6 +28,8 @@
   }
   
   $requestUUID = $_SERVER["HTTP_X_SECONDLIFE_OWNER_KEY"];
+
+  if(count(getAccessRightsFromUUID($requestUUID)) == 0) error("Access denied.");
 
   $dbConn = null;
 ?>    

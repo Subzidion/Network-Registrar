@@ -1,6 +1,6 @@
 <?php
   //Get's a Generation from GenerationID
-  function getGenerationFromGenerationID($id) {
+  function getGenerationNameFromGenerationID($id) {
     //Check parameters as valid
     if(!is_int($pid)) throw new Exception("Invalid Generation ID.");
     //Use Database Connection variable in registrarRequest
