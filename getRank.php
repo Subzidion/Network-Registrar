@@ -21,6 +21,25 @@
     return $data;
   }
 
+  //Get's a Rank from PID
+  function getRankNameFromPID($pid) {
+    //Check parameters as valid
+    $pid = intval($pid);
+    //Use Database Connection variable in registrarRequest
+    global $dbConn;
+    //Prepare query
+    $query = "SELECT personnel.rankID AS rankID FROM personnel WHERE personnel.PID = :pid";
+    //Prepare Statement
+    $statement = $dbConn->prepare($query);
+    //Bind parameter to query
+    $statement->bindValue(':pid', intval($pid), PDO::PARAM_INT);
+    //Execute, throw exception if query fails
+    if(!$statement->execute()) throw new Exception("Query failed.");
+    //Fetch result
+    $result = $statement->fetch(PDO::FETCH_ASSOC);
+    return getRankNameFromRankID($result['rankID']);
+  }
+
   //Get's a RankDescription from RankID
   function getRankDescriptionFromRankID($id) {
     //Check parameters as valid

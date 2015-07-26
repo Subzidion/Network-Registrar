@@ -21,6 +21,28 @@
     return $data;
   }
 
+  //Get's a DivisionID from a Division Name
+  function getDivisionIDFromDivisionName($name) {
+    //Check parameters as valid
+    if(!is_string($name)) throw new Exception("Invalid Division name.");
+    //Use Database Connection variable in registrarRequest
+    global $dbConn;
+    //Prepare query
+    $query = "SELECT divisions.ID AS divisionID FROM divisions WHERE divisions.name = :name";
+    //Prepare Statement
+    $statement = $dbConn->prepare($query);
+    //Bind parameter to query
+    $statement->bindValue(':name', $name, PDO::PARAM_STR);
+    //Execute, throw exception if query fails
+    if(!$statement->execute()) throw new Exception("Query failed.");
+    //Fetch result
+    $result = $statement->fetch(PDO::FETCH_ASSOC);
+    //Create array of data to return
+    $data = array('divisionID'  => intval($result['divisionID']));
+    //Return array
+    return $data;
+  }
+
   //Get's a DivisionDescription from DivisionID
   function getDivisionDescriptionFromDivisionID($id) {
     //Check parameters as valid

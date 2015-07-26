@@ -9,6 +9,7 @@
     include "getRank.php";
     include "getDivision.php";
     include "getPersonnel.php";
+    include "updatePersonnel.php";
     include "testGetters.php";
   //
 
@@ -48,7 +49,7 @@
     //Promote or Demote to RankID or RankName Personnel based on UUID, username, or PID
     else if($_POST['request'] == "updateRank") {
       //Get User PID from Username, UUID, or PID
-      $targetPID = getPid();
+      $targetPID = getPID();
       //RankID
       if(isset($_POST['rankID'])) $targetRank = $_POST['rankID'];
       //Rank Name -> RankID
@@ -59,21 +60,31 @@
       updateRank($targetPID, $targetRank);
     }
 
+    //Promote or Demote to RankID or RankName Personnel based on UUID, username, or PID
+    else if($_POST['request'] == "updateActive") {
+      //Get User PID from Username, UUID, or PID
+      $targetPID = getPID();
+      //Update Active
+      updateActive(getPID());
+    }
+
     else if($_POST['request'] == "updateKD") {
       if(!isset($_POST['kills']) || !isset($_POST['deaths'])) die(json_encode(array("Invalid Parameters. Usage: request=\"updateKD\" must include a UUID, kills, and deaths parameters.")));
-      $targetPID = getPid();
+      $targetPID = getPID();
       updateKD($targetPID, $_POST['kills'], $_POST['deaths']);
 
     }
 
-    //Get Rank Patch for UUID, username, PID
-    else if($_POST['request'] == "rankPatch") {
-      //Get User PID from Username, UUID, or PID
-      $targetPID = getPid();
-      //UUID -> Rank Insignia
-      //if(isset($_POST['UUID'])) die(json_encode(getRankInsigniaFromID(/* GET PERSONNEL RANK HERE */)['rankInsignia']));
-      //else die(json_encode(array("Invalid Parameters. Usage: request=\"rankPatch\" must include a UUID parameter.")))
+    else if($_POST['request'] == "rank") {
+      if(!isset($_POST['type'])) die(json_encode("Invalid Parameters. Usage: request=\"rank\" must include a Type parameter."));
+      if($_POST['type'] == "all") {
+        //Get all of specific rnak
+      }
+      else if($_POST['type'] == "user") die(json_encode(getRankNameFromPID(getPID())['rankName']));
     }
+
+    //Get Rank Patch for UUID, username, PID
+    else if($_POST['request'] == "rankPatch") die(json_encode(getRankInsigniaFromRankName(getRankNameFromPID(getPID())['rankName'])['rankInsignia']));
 
     //Get Account Information by UUID, username, PID
     else if($_POST['request'] == "accounts") {
@@ -82,27 +93,46 @@
         //All known Accounts
         if($_POST['type'] == "alts") {
           //Get User PID from Username, UUID, or PID
-          $targetPID = getPid();
-          //UUID -> All Known Accounts' Details
-          //if(isset($_POST['UUID'])) 
-          //Username -> All Known Accounts' Details
-          //if(isset($_POST['UUID']))
+          $targetPID = getPID();
+
         }
         //Main Account
         if($_POST['type'] == "main") {
           //Get User PID from Username, UUID, or PID
-          $targetPID = getPid();
-          //UUID -> Main Account Details
-          //if(isset($_POST['UUID']))
-          //Username -> Main Account Details
-          //if(isset($_POST['UUID']))
+          $targetPID = getPID();
+          
         }
       }
     }
 
     //Get Personnel by Rank, Division, Batch, Active, Generation, PID, Username, UUID
     else if($_POST['request'] == "personnel") {
-
+      if($_POST['type'] == "user") die(json_encode(array_values(getPersonnelByPID(getPID()))));
+      else if($_POST['type'] == "division") {
+        $results = getPersonnelByDivision($_POST['division']);
+        for($i = 0; $i < count($results); $i++) $results[$i] = array_values($results[$i]);
+        die(json_encode(array_values($results)));
+      }
+      else if($_POST['type'] == "rank") {
+        $results = getPersonnelByRank($_POST['rank']);
+        for($i = 0; $i < count($results); $i++) $results[$i] = array_values($results[$i]);
+        die(json_encode(array_values($results)));
+      }
+      else if($_POST['type'] == "batch") {
+        $results = getPersonnelByBatch($_POST['batch']);
+        for($i = 0; $i < count($results); $i++) $results[$i] = array_values($results[$i]);
+        die(json_encode(array_values($results)));
+      }
+      else if($_POST['type'] == "generation") {
+        $results = getPersonnelByGeneration($_POST['value']);
+        for($i = 0; $i < count($results); $i++) $results[$i] = array_values($results[$i]);
+        die(json_encode(array_values($results)));
+      }
+      else if($_POST['type'] == "active") {
+        $results = getPersonnelByActive($_POST['value']);
+        for($i = 0; $i < count($results); $i++) $results[$i] = array_values($results[$i]);
+        die(json_encode(array_values($results)));
+      }
     }
 
     //Get Personnel by Rank, Division, Batch, Active, Generation, PID, Username, UUID
@@ -112,7 +142,7 @@
     }
   //
 
-  if($_POST['request'] == "test") {
-    die(json_encode(array_values(getPersonnelByPID(29))));
-  }
+    else if($_POST['request'] == "test") {
+      die(json_encode(array_values(getPersonnelByPID(30))));
+    }
 ?>
