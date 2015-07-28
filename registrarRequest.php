@@ -134,13 +134,24 @@
         die(json_encode(array_values($results)));
       }
     }
-
     //Get Personnel by Rank, Division, Batch, Active, Generation, PID, Username, UUID
     //Get Main or ALL accounts associated with each of those personnel
     else if($_POST['request'] == "full") {
 
     }
   //
+
+    //Query a Node or information about a Node
+    else if($_POST['request'] == "node") {
+      //Return a report on the node
+      if($_POST['type'] == "information") {
+
+      }
+      //Gets the current users in a sim
+      if($_POST['type'] == "current") {
+
+      }
+    }
 
     else if($_POST['request'] == "test") {
       die(json_encode(array_values(getPersonnelByPID(30))));
