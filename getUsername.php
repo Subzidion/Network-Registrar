@@ -1,8 +1,7 @@
 <?php
   //Get's a Username from a PID
   function getUsernameFromPID($pid) {
-    //Check parameters as valid
-    if(!is_int($pid)) throw new Exception("Invalid Personnel ID.");
+    $pid = intval($pid);
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query

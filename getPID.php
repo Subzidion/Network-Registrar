@@ -46,7 +46,8 @@
       else if(isset($_POST['username'])) $targetPID = getPIDFromUsername($_POST['username'])['PID'];
       //PID
       else if(isset($_POST['PID'])) $targetPID = $_POST['PID'];
-      if($targetPID == "") die(json_encode(array("Invalid Parameters. Usage: request=\"updateKD\" must include a UUID, kills, and deaths parameters.")));
+      //What to return when a user is not found in the database
+      if($targetPID == 0) die(json_encode(array("Uesr not found.")));
       return $targetPID;
   }
 ?>
