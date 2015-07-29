@@ -10,6 +10,7 @@
     include "getDivision.php";
     include "getPersonnel.php";
     include "updatePersonnel.php";
+    include "Rating.php";
     include "getCombat.php";
     include "testGetters.php";
   //
@@ -54,7 +55,14 @@
         $results = getLeaderboard($_POST['type'], $_POST['limit']);
         for($i = 0; $i < count($results); $i++) $results[$i] = array_values($results[$i]);
         die(json_encode(array_values($results)));
-    }
+      }
+
+      else if($_POST['request'] == "updateElo") {
+        if(!(isset($_POST['winner'])) || !(isset($_POST['loser']))) throw new Exception ("Invalid parameters");
+        else {
+          updateElo(getPIDFromUUID($_POST['winner']), getPIDFromUUID($_POST['loser']));
+        }
+      }
 
       //Promote or Demote to RankID or RankName Personnel based on UUID, username, or PID
       else if($_POST['request'] == "updateRank") {

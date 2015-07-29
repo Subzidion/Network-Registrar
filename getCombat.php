@@ -1,5 +1,5 @@
 <?php
-    function updateKD($pid, $kills, $deaths) {
+  function updateKD($pid, $kills, $deaths) {
     global $dbConn;
     //Prepare query
     $query = "UPDATE combat SET kills=kills + :kills, deaths=deaths + :deaths WHERE PID=:pid;";
@@ -10,9 +10,42 @@
     //Bind parameter to query
     $statement->bindValue(':kills', intval($kills), PDO::PARAM_INT);
     //Bind parameter to query
-    $statement->bindValue(':deaths', intval($deaths), PDO::PARAM_INT);
-    //Execute, throw exception if query fails
-    if(!$statement->execute()) throw new Exception("Query failed: " . $statement->errorInfo()[2] .".");
+   $statement->bindValue(':deaths', intval($deaths), PDO::PARAM_INT);
+   //Execute, throw exception if query fails
+   if(!$statement->execute()) throw new Exception("Query failed: " . $statement->errorInfo()[2] .".");
+  }
+
+  function updateElo($winner, $loser) {
+    $winnerPID = $winner['PID'];
+    $loserPID = $loser['PID'];
+    $winnerElo = getEloFromPID($winner['PID']);
+    $loserElo = getEloFromPID($loser['PID']);
+    $rating = new Rating($winnerElo, $loserElo, 1, 0);
+    $result = $rating->getNewRatings();
+    $winnerNewElo = round($result['a']);
+    $loserNewElo = round($result['b']);
+    global $dbConn;
+    $query = "UPDATE combat SET Elo = :winner WHERE PID = :id";
+    $statement = $dbConn->prepare($query);
+    $statement->bindValue('winner', intval($winnerNewElo), PDO::PARAM_INT);
+    $statement->bindValue('id', intval($winner['PID']), PDO::PARAM_INT);
+    if(!$statement->execute()) throw new Exception("Query failed: " . $statement->errorInfo()[2] . ".");
+    $query = "UPDATE combat SET Elo = :loser WHERE PID = :id";
+    $statement = $dbConn->prepare($query);
+    $statement->bindValue('loser', intval($loserNewElo), PDO::PARAM_INT);
+    $statement->bindValue('id', intval($loser['PID']), PDO::PARAM_INT);
+    if(!$statement->execute()) throw new Exception("Query failed: " . $statement->errorInfo()[2] . ".");
+    die("Winner ($winnerPID) Elo: " . $winnerElo . " -> " . $winnerNewElo . "\nLoser ($loserPID) Elo: " . $loserElo . " -> " . $loserNewElo . "\n");
+  }
+
+  function getEloFromPID($pid) {
+    global $dbConn;
+    $query = "SELECT combat.Elo AS Elo FROM combat WHERE PID = :id";
+    $statement = $dbConn->prepare($query);
+    $statement->bindValue('id', strval($pid), PDO::PARAM_STR);
+    if(!$statement->execute()) throw new Exception("Query failed: " . $statement->errorInfo()[2] . ".");
+    $result = $statement->fetch(PDO::FETCH_ASSOC);
+    return $result['Elo'];
   }
 
   function getKD($pid) {
@@ -66,10 +99,5 @@
 
     //Return array
     return $result;
-  }
-
-  function formatLeaderboard($result) {
-     //[ [displayname,kills,deaths,solokills,solodeaths,ctf,koth]
-
   }
 ?>
