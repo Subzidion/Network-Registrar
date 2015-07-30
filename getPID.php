@@ -41,13 +41,13 @@
 
   //Convert _POST values of UUID or Username or PID to PID
   function getPID() {
-      if(isset($_POST['UUID'])) $targetPID = getPIDFromUUID($_POST['UUID'])['PID'];
+      if(isset($_POST['UUID'])) return getPIDFromUUID($_POST['UUID'])['PID'];
       //Username -> PID
-      else if(isset($_POST['username'])) $targetPID = getPIDFromUsername($_POST['username'])['PID'];
+      else if(isset($_POST['username'])) return getPIDFromUsername($_POST['username'])['PID'];
       //PID
-      else if(isset($_POST['PID'])) $targetPID = $_POST['PID'];
+      else if(isset($_POST['PID'])) return $_POST['PID'];
       //What to return when a user is not found in the database
-      if($targetPID == 0) die(json_encode(array("Uesr not found.")));
+      if($targetPID == 0) die(json_encode(array("User not found.")));
       return $targetPID;
   }
 ?>

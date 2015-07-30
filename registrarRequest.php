@@ -43,12 +43,12 @@
       if($_POST['request'] == "PID") {
         //UUID -> PID
         if(isset($_POST['UUID'])) die(json_encode(str_pad(getPIDFromUUID($_POST['UUID'])['PID'], 3, "0", STR_PAD_LEFT)));
-        //Username -> PID
+        //Username -> PIDgetPID
         if(isset($_POST['username'])) die(json_encode(str_pad(getPIDFromUsername($_POST['username'])['PID'], 3, "0", STR_PAD_LEFT)));
         else die(json_encode(array("Invalid Parameters. Usage: request=\"PID\" must include a UUID or username parameter.")));
       }
 
-      else if($_POST['request'] == "combat") die(json_encode(array_values(getKD(getPID()))));
+      else if($_POST['request'] == "getKD") die(json_encode(array_values(getKD(getPID()))));
 
       else if($_POST['request'] == "leaderboard") {
         if(!(isset($_POST['type'])) || !(isset($_POST['limit']))) throw new Exception("Invalid parameters.");
@@ -77,6 +77,8 @@
         //Change Rank
         updateRank($targetPID, $targetRank);
       }
+
+      else if($_POST['request'] == "elo") die(getEloFromPID(getPID()));
 
       //Promote or Demote to RankID or RankName Personnel based on UUID, username, or PID
       else if($_POST['request'] == "updateActive") {

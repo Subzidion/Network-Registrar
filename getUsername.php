@@ -5,7 +5,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT accounts.username AS username FROM accounts WHERE accounts.PID = :pid";
+    $query = "SELECT accounts.username AS username FROM accounts WHERE accounts.PID = :pid AND accounts.alt = 0";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query

@@ -61,6 +61,19 @@
     if(!$statement->execute()) throw new Exception("Query failed: " . $statement->errorInfo()[2] .".");
     //Fetch result
     $result = $statement->fetch(PDO::FETCH_ASSOC);
+    $name = getUsernameFromPID($result['PID'])['username'];
+    if(strpos($name, ".") === FALSE) $result['PID'] = ucfirst($name . " R.");
+    else {
+        $name = explode(".", $name);
+        $result['PID'] = ucfirst($name[0]) . " " . strToUpper($name[1][0] . ".");
+    }
+    $result['kills'] = str_pad($result['kills'], 4, "0", STR_PAD_LEFT);
+    $result['deaths'] = str_pad($result['deaths'], 4, "0", STR_PAD_LEFT);
+    $result['soloKills'] = str_pad($result['soloKills'], 4, "0", STR_PAD_LEFT);
+    $result['soloDeaths'] = str_pad($result['soloDeaths'], 4, "0", STR_PAD_LEFT);
+    $result['Elo'] = str_pad($result['Elo'], 4, "0", STR_PAD_LEFT);
+    $result['captures'] = str_pad($result['captures'], 4, "0", STR_PAD_LEFT);
+    $result['KOTH'] = str_pad($result['KOTH'], 4, "0", STR_PAD_LEFT);
     //Return array
     return $result;
   }
@@ -69,10 +82,10 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    if($type == "group")      $query = "SELECT combat.PID AS PID, combat.kills AS kills, combat.deaths AS deaths, combat.soloKills AS soloKills, combat.soloDeaths as soloDeaths, combat.Elo AS Elo, combat.captures AS captures, combat.KOTH AS KOTH FROM combat ORDER BY kills/deaths DESC LIMIT :count";
-    else if($type == "duel")  $query = "SELECT combat.PID AS PID, combat.kills AS kills, combat.deaths AS deaths, combat.soloKills AS soloKills, combat.soloDeaths as soloDeaths, combat.Elo AS Elo, combat.captures AS captures, combat.KOTH AS KOTH FROM combat ORDER BY Elo DESC LIMIT :count";
-    else if($type == "ctf")   $query = "SELECT combat.PID AS PID, combat.kills AS kills, combat.deaths AS deaths, combat.soloKills AS soloKills, combat.soloDeaths as soloDeaths, combat.Elo AS Elo, combat.captures AS captures, combat.KOTH AS KOTH FROM combat ORDER BY captures DESC LIMIT :count";
-    else if($type == "koth")  $query = "SELECT combat.PID AS PID, combat.kills AS kills, combat.deaths AS deaths, combat.soloKills AS soloKills, combat.soloDeaths as soloDeaths, combat.Elo AS Elo, combat.captures AS captures, combat.KOTH AS KOTH FROM combat ORDER BY koth DESC LIMIT :count";
+    if($type == "group")      $query = "SELECT combat.PID AS PID, combat.kills AS kills, combat.deaths AS deaths, combat.soloKills AS soloKills, combat.soloDeaths as soloDeaths, combat.Elo AS Elo, combat.captures AS captures, combat.KOTH AS KOTH FROM combat, personnel WHERE personnel.active = 1 AND personnel.PID = combat.PID ORDER BY (combat.kills/combat.deaths) DESC LIMIT :count";
+    else if($type == "duel")  $query = "SELECT combat.PID AS PID, combat.kills AS kills, combat.deaths AS deaths, combat.soloKills AS soloKills, combat.soloDeaths as soloDeaths, combat.Elo AS Elo, combat.captures AS captures, combat.KOTH AS KOTH FROM combat, personnel WHERE personnel.active = 1 AND personnel.PID = combat.PID ORDER BY combat.Elo DESC LIMIT :count";
+    else if($type == "ctf")   $query = "SELECT combat.PID AS PID, combat.kills AS kills, combat.deaths AS deaths, combat.soloKills AS soloKills, combat.soloDeaths as soloDeaths, combat.Elo AS Elo, combat.captures AS captures, combat.KOTH AS KOTH FROM combat, personnel WHERE personnel.active = 1 AND personnel.PID = combat.PID ORDER BY combat.captures DESC LIMIT :count";
+    else if($type == "koth")  $query = "SELECT combat.PID AS PID, combat.kills AS kills, combat.deaths AS deaths, combat.soloKills AS soloKills, combat.soloDeaths as soloDeaths, combat.Elo AS Elo, combat.captures AS captures, combat.KOTH AS KOTH FROM combat, personnel WHERE personnel.active = 1 AND personnel.PID = combat.PID ORDER BY combat.koth DESC LIMIT :count";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
