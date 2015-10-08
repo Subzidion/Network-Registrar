@@ -29,4 +29,19 @@
     //Return array
     return $data;
   }
+
+  function getActiveFromPID($pid) {
+    //Use Database Connection variable in registrarRequest
+    global $dbConn;
+    //Prepare query
+    $query = "SELECT personnel.active AS active FROM personnel WHERE personnel.PID = :pid";
+    //Prepare Statement
+    $statement = $dbConn->prepare($query);
+    //Bind parameter to query
+    $statement->bindValue(':pid', intval($pid), PDO::PARAM_INT);
+    if(!$statement->execute()) throw new Exception("Query failed: " . $statement->errorInfo()[2] .".");
+    //Fetch result
+    $result = $statement->fetch(PDO::FETCH_ASSOC);
+    return $result['active'];
+  }
 ?>

@@ -6,7 +6,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT divisions.name AS divisionName FROM divisions WHERE divisions.ID = :id";
+    $query = "SELECT division.name AS divisionName FROM division WHERE division.ID = :id";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
@@ -28,7 +28,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT divisions.ID AS divisionID FROM divisions WHERE divisions.name = :name";
+    $query = "SELECT division.ID AS divisionID FROM division WHERE division.name = :name";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
@@ -50,7 +50,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT divisions.info AS divisionDescription FROM divisions  WHERE divisions.ID = :id";
+    $query = "SELECT division.info AS divisionDescription FROM division  WHERE division.ID = :id";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
@@ -72,7 +72,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT divisions.insigniaUUID AS divisionInsignia FROM divisions  WHERE divisions.ID = :id";
+    $query = "SELECT division.insigniaUUID AS divisionInsignia FROM division  WHERE division.ID = :id";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
@@ -94,7 +94,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT divisions.info AS divisionDescription FROM divisions  WHERE divisions.name = :name";
+    $query = "SELECT division.info AS divisionDescription FROM division  WHERE division.name = :name";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
@@ -116,7 +116,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT divisions.insigniaUUID AS divisionInsignia FROM divisions  WHERE divisions.name = :name";
+    $query = "SELECT division.insigniaUUID AS divisionInsignia FROM division  WHERE division.name = :name";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query

@@ -6,7 +6,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT personnel.PID AS PID, personnel.active AS active, personnel.accessrights AS accessRights, personnel.joindate AS joinDate, personnel.generationID AS generationID, personnel.rankID AS rankID, personnel.divisionID AS divisionID, personnel.batchID AS batchID, personnel.kills AS kills, personnel.deaths AS deaths FROM personnel WHERE personnel.PID = :pid";
+    $query = "SELECT personnel.PID AS PID, personnel.active AS active, personnel.accessrights AS accessRights, personnel.joindate AS joinDate, personnel.generationID AS generationID, personnel.rankID AS rankID, personnel.divisionID AS divisionID, personnel.batchID AS batchID FROM personnel WHERE personnel.PID = :pid";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
@@ -32,7 +32,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT personnel.PID AS PID, personnel.active AS active, personnel.accessrights AS accessRights, personnel.joindate AS joinDate, personnel.generationID AS generationID, personnel.rankID AS rankID, personnel.divisionID AS divisionID, personnel.batchID AS batchID, personnel.kills AS kills, personnel.deaths AS deaths FROM personnel WHERE personnel.divisionID = :id AND personnel.active = 1";
+    $query = "SELECT personnel.PID AS PID, personnel.active AS active, personnel.accessrights AS accessRights, personnel.joindate AS joinDate, personnel.generationID AS generationID, personnel.rankID AS rankID, personnel.divisionID AS divisionID, personnel.batchID AS batchID FROM personnel WHERE personnel.divisionID = :id AND personnel.active = 1";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
@@ -60,7 +60,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT personnel.PID AS PID, personnel.active AS active, personnel.accessrights AS accessRights, personnel.joindate AS joinDate, personnel.generationID AS generationID, personnel.rankID AS rankID, personnel.divisionID AS divisionID, personnel.batchID AS batchID, personnel.kills AS kills, personnel.deaths AS deaths FROM personnel WHERE personnel.rankID = :id AND personnel.active = 1";
+    $query = "SELECT personnel.PID AS PID, personnel.active AS active, personnel.accessrights AS accessRights, personnel.joindate AS joinDate, personnel.generationID AS generationID, personnel.rankID AS rankID, personnel.divisionID AS divisionID, personnel.batchID AS batchID FROM personnel WHERE personnel.rankID = :id AND personnel.active = 1";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
@@ -88,7 +88,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT personnel.PID AS PID, personnel.active AS active, personnel.accessrights AS accessRights, personnel.joindate AS joinDate, personnel.generationID AS generationID, personnel.rankID AS rankID, personnel.divisionID AS divisionID, personnel.batchID AS batchID, personnel.kills AS kills, personnel.deaths AS deaths FROM personnel WHERE personnel.batchID = :batch AND personnel.active = 1";
+    $query = "SELECT personnel.PID AS PID, personnel.active AS active, personnel.accessrights AS accessRights, personnel.joindate AS joinDate, personnel.generationID AS generationID, personnel.rankID AS rankID, personnel.divisionID AS divisionID, personnel.batchID AS batchID FROM personnel WHERE personnel.batchID = :batch AND personnel.active = 1";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
@@ -119,7 +119,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT personnel.PID AS PID, personnel.active AS active, personnel.accessrights AS accessRights, personnel.joindate AS joinDate, personnel.generationID AS generationID, personnel.rankID AS rankID, personnel.divisionID AS divisionID, personnel.batchID AS batchID, personnel.kills AS kills, personnel.deaths AS deaths FROM personnel WHERE personnel.active = :status";
+    $query = "SELECT personnel.PID AS PID, personnel.active AS active, personnel.accessrights AS accessRights, personnel.joindate AS joinDate, personnel.generationID AS generationID, personnel.rankID AS rankID, personnel.divisionID AS divisionID, personnel.batchID AS batchID FROM personnel WHERE personnel.active = :status";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
@@ -147,7 +147,7 @@
     //Use Database Connection variable in registrarRequest
     global $dbConn;
     //Prepare query
-    $query = "SELECT personnel.PID AS PID, personnel.active AS active, personnel.accessrights AS accessRights, personnel.joindate AS joinDate, personnel.generationID AS generationID, personnel.rankID AS rankID, personnel.divisionID AS divisionID, personnel.batchID AS batchID, personnel.kills AS kills, personnel.deaths AS deaths FROM personnel WHERE personnel.generationID = :id AND personnel.active = 1";
+    $query = "SELECT personnel.PID AS PID, personnel.active AS active, personnel.accessrights AS accessRights, personnel.joindate AS joinDate, personnel.generationID AS generationID, personnel.rankID AS rankID, personnel.divisionID AS divisionID, personnel.batchID AS batchID FROM personnel WHERE personnel.generationID = :id AND personnel.active = 1";
     //Prepare Statement
     $statement = $dbConn->prepare($query);
     //Bind parameter to query
@@ -168,5 +168,19 @@
       $result[$i]['batchID'] = str_pad($result[$i]['batchID'], 3, "0", STR_PAD_LEFT);
     }
     return $result;
+  }
+
+    function getNextBatch() {
+    global $dbConn;
+    //Prepare query
+    $query = "SELECT MAX(batchID) AS batch FROM personnel;";
+    //Prepare Statement
+    $statement = $dbConn->prepare($query);
+    //Execute, throw exception if query fails
+    if(!$statement->execute()) throw new Exception("Query failed.");
+    //Fetch result
+    $result = $statement->fetch(PDO::FETCH_ASSOC);
+    //Return array
+    return $result['batch'] + 1;
   }
 ?>

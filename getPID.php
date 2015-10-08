@@ -50,4 +50,18 @@
       if($targetPID == 0) die(json_encode(array("User not found.")));
       return $targetPID;
   }
+
+  function getNextAvailablePID() {
+    global $dbConn;
+    //Prepare query
+    $query = "SELECT MAX(PID) AS PID FROM personnel;";
+    //Prepare Statement
+    $statement = $dbConn->prepare($query);
+    //Execute, throw exception if query fails
+    if(!$statement->execute()) throw new Exception("Query failed.");
+    //Fetch result
+    $result = $statement->fetch(PDO::FETCH_ASSOC);
+    //Return array
+    return $result['PID'] + 1;
+  }
 ?>

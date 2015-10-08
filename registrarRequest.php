@@ -9,9 +9,11 @@
     include "getRank.php";
     include "getDivision.php";
     include "getPersonnel.php";
+    include "updateUser.php";
     include "updatePersonnel.php";
     include "Rating.php";
     include "getCombat.php";
+    include "getEquipment.php";
     include "testGetters.php";
   //
 
@@ -57,8 +59,18 @@
         die(json_encode(array_values($results)));
       }
 
+      else if($_POST['request'] == "processBatch") {
+          $total = $_POST['count'];
+          $batch = json_decode($_POST['batch']);
+          $batchID = getNextBatch();
+          $joindate = date("Y-m-t H:i:s");
+          for($i = 0; $i < $total; $i++) {
+            addPersonnel($batch[4*$i], $batch[4*$i + 1], $batch[4*$i + 2], $joindate, $batch[4*$i + 3], $batchID);
+          }
+      }
+
       else if($_POST['request'] == "updateElo") {
-        if(!(isset($_POST['winner'])) || !(isset($_POST['loser']))) throw new Exception ("Invalid parameters");
+        if(!(isset($_POST['winner'])) || !(isset($_POST['loser']))) throw new Exception("Invalid parameters");
         else {
           updateElo(getPIDFromUUID($_POST['winner']), getPIDFromUUID($_POST['loser']));
         }
@@ -89,6 +101,16 @@
       else if($_POST['request'] == "updateKD") {
         if(!isset($_POST['kills']) || !isset($_POST['deaths'])) die(json_encode(array("Invalid Parameters. Usage: request=\"updateKD\" must include a UUID, kills, and deaths parameters.")));
         updateKD(getPID(), $_POST['kills'], $_POST['deaths']);
+      }
+
+      else if($_POST['request'] == "getEquipment") {
+        $pid = getPID();
+        if($pid == 0) die(json_encode(array("User not found.")));
+        if(getActiveFromPID($pid)) {
+          $results = getEquipmentFromPID($pid);
+          for($i = 0; $i < count($results); $i++) $results[$i] = array_values($results[$i]);
+          die(json_encode(array_values($results)));
+        }
       }
 
       else if($_POST['request'] == "rank") {
@@ -154,6 +176,9 @@
       //Get Main or ALL accounts associated with each of those personnel
       else if($_POST['request'] == "full") {
 
+      }
+      else if($_POST['request'] == "test") {
+        die(json_encode(getNextAvailablePID()));
       }
     //
 
